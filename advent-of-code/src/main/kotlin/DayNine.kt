@@ -3,6 +3,31 @@ import kotlin.math.min
 
 private typealias Graph = Map<String, DayNine.Node>
 
+private fun getPermutationsHelper(
+    currentPermutation: List<String>,
+    availableElements: List<String>,
+    permutations: MutableList<List<String>>
+) {
+    if (availableElements.isEmpty()) {
+        permutations.add(currentPermutation)
+    } else {
+        for (element in availableElements) {
+            val updatedPermutation = currentPermutation + element
+            val updatedAvailableElements = availableElements - element
+            getPermutationsHelper(
+                updatedPermutation,
+                updatedAvailableElements,
+                permutations
+            )
+        }
+    }
+}
+
+fun getPermutations(elements: List<String>): List<List<String>> {
+    val permutations: MutableList<List<String>> = mutableListOf()
+    getPermutationsHelper(emptyList(), elements, permutations)
+    return permutations
+}
 class DayNine {
 
     data class InputEdge(
@@ -64,32 +89,6 @@ class DayNine {
             cost += edgeCost
         }
         return cost
-    }
-
-    private fun getPermutationsHelper(
-        currentPermutation: List<String>,
-        availableElements: List<String>,
-        permutations: MutableList<List<String>>
-    ) {
-        if (availableElements.isEmpty()) {
-            permutations.add(currentPermutation)
-        } else {
-            for (element in availableElements) {
-                val updatedPermutation = currentPermutation + element
-                val updatedAvailableElements = availableElements - element
-                getPermutationsHelper(
-                    updatedPermutation,
-                    updatedAvailableElements,
-                    permutations
-                )
-            }
-        }
-    }
-
-    private fun getPermutations(elements: List<String>): List<List<String>> {
-        val permutations: MutableList<List<String>> = mutableListOf()
-        getPermutationsHelper(emptyList(), elements, permutations)
-        return permutations
     }
 
     private fun Graph.getNodesNames() = this.keys.toList()
